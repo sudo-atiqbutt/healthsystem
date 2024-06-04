@@ -1,0 +1,34 @@
+# Treatment Management REST API
+
+## Requirements
+- Java 17
+- Maven
+- MySQL
+
+## Setup Instructions
+1. Clone the repository:
+    ```sh
+    git clone git@github.com:sudo-atiqbutt/healthsystem.git
+    cd treatment-management
+    ```
+
+2. Create a database in MySQL and update the `application.properties` file with your database credentials.
+
+3. Run the application:
+    ```sh
+    mvn spring-boot:run
+    ```
+
+4. Insert initial data:
+    ```sh
+    mysql -u your_username -p your_db_name < src/main/resources/data.sql
+    ```
+
+## API Endpoints
+- **Create Treatment**: `POST /api/treatments`
+- **Get Treatment by ID**: `GET /api/treatments/{id}`
+
+## Running Tests
+To run the tests:
+```sh
+mvn test
