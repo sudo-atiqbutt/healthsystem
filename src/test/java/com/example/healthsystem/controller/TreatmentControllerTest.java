@@ -1,8 +1,6 @@
 package com.example.healthsystem.controller;
 
-import com.example.healthsystem.entity.Medicine;
-import com.example.healthsystem.entity.Patient;
-import com.example.healthsystem.entity.Treatment;
+import com.example.healthsystem.dto.TreatmentDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +23,10 @@ public class TreatmentControllerTest {
 
     @Test
     public void testCreateTreatment() throws Exception {
-        Patient patient = new Patient();
-        patient.setId(1L);
-
-        Medicine medicine = new Medicine();
-        medicine.setId(1L);
-
-        Treatment treatment = new Treatment();
+        TreatmentDto treatment = new TreatmentDto();
         treatment.setAdvice("Take twice daily");
-        treatment.setPatient(patient);
-        treatment.setMedicine(medicine);
+        treatment.setPatientId(1L);
+        treatment.setMedicineId(1L);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/treatments")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,7 +39,7 @@ public class TreatmentControllerTest {
     public void testGetTreatmentById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/treatments/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.advice").value("Take twice daily"));
     }
 }
 

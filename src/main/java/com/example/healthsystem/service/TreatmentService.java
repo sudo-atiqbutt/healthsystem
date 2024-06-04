@@ -1,52 +1,48 @@
 package com.example.healthsystem.service;
 
+import com.example.healthsystem.dto.TreatmentDto;
 import com.example.healthsystem.entity.Treatment;
 import com.example.healthsystem.repository.MedicineRepository;
 import com.example.healthsystem.repository.PatientRepository;
 import com.example.healthsystem.repository.TreatmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Objects;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TreatmentService {
 
-    @Autowired
-    private TreatmentRepository treatmentRepository;
+    private final TreatmentRepository treatmentRepository;
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
-    @Autowired
-    private MedicineRepository medicineRepository;
+    private final MedicineRepository medicineRepository;
 
-    public ResponseEntity<Treatment> createTreatment(final Treatment treatment) {
-        if (Objects.isNull(treatment.getPatient()) || Objects.isNull(treatment.getMedicine())) {
+    public TreatmentDto createTreatment(final TreatmentDto treatment) {
+        if (Objects.isNull(treatment.getPatientId()) || Objects.isNull(treatment.getMedicineId())) {
             throw new IllegalArgumentException("Patient and Medicine must not be null");
         }
 
-        if (!patientRepository.existsById(treatment.getPatient().getId())) {
+        if (!patientRepository.existsById(treatment.getPatientId())) {
             throw new EntityNotFoundException("Patient not found");
         }
 
-        if (!medicineRepository.existsById(treatment.getMedicine().getId())) {
+        if (!medicineRepository.existsById(treatment.getMedicineId())) {
             throw new EntityNotFoundException("Medicine not found");
         }
 
-        Treatment savedTreatment = treatmentRepository.save(treatment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTreatment);
+        Treatment savedTreatment = treatmentRepository.save(treatment.toEntity());
+        return savedTreatment.toDto();
     }
 
-    public ResponseEntity<Treatment> getTreatmentById(final Long id) {
-        return ResponseEntity.ok(treatmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Treatment not found")));
+    public TreatmentDto getTreatmentById(final Long id) {
+        return treatmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Treatment not found")).toDto();
     }
 
 

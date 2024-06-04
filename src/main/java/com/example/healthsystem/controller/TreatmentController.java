@@ -1,8 +1,9 @@
 package com.example.healthsystem.controller;
 
-import com.example.healthsystem.entity.Treatment;
+import com.example.healthsystem.dto.TreatmentDto;
 import com.example.healthsystem.service.TreatmentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,21 +12,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TreatmentController.java
 @RestController
 @RequestMapping("/api/treatments")
+@RequiredArgsConstructor
 public class TreatmentController {
-    @Autowired
-    private TreatmentService treatmentService;
+
+    private final TreatmentService treatmentService;
 
     @PostMapping
-    public ResponseEntity<Treatment> createTreatment(@RequestBody Treatment treatment) {
-       return treatmentService.createTreatment(treatment);
+    public ResponseEntity<TreatmentDto> createTreatment(@RequestBody TreatmentDto treatmentDto) {
+       return ResponseEntity.status(HttpStatus.CREATED).body(treatmentService.createTreatment(treatmentDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long id) {
-        return treatmentService.getTreatmentById(id);
+    public ResponseEntity<TreatmentDto> getTreatmentById(@PathVariable Long id) {
+        return ResponseEntity.ok(treatmentService.getTreatmentById(id));
     }
 }
 
